@@ -22,6 +22,9 @@ class Composer
                     hierarchy:
                         "ROLE_ADMIN": ["ROLE_FRIEND"]
                         "ROLE_FRIEND": ["ROLE_USER"]
+                    access_control:
+                        - { path: ^/admin, roles: ROLE_ADMIN }
+                        - { path: ^/account, roles: ROLE_USER }
             YAML;
 
             file_put_contents($file, $yaml.PHP_EOL);

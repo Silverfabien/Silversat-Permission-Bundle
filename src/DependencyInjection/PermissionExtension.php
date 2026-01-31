@@ -2,6 +2,7 @@
 
 namespace Silversat\PermissionBundle\DependencyInjection;
 
+use Silversat\PermissionBundle\Security\AccessControlSubscriber;
 use Silversat\PermissionBundle\Security\PermissionChecker;
 use Silversat\PermissionBundle\Security\RoleHierarchy;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -21,6 +22,7 @@ class PermissionExtension extends Extension
 
         $container->setParameter('silversat_permission.site', $config['site']);
         $container->setParameter('silversat_permission.hierarchy', $config['hierarchy']);
+        $container->setParameter('silversat_permission.access_control', $config['access_control']);
 
         $container->register(RoleHierarchy::class, RoleHierarchy::class)
             ->addArgument("%silversat_permission.hierarchy%");
@@ -28,5 +30,11 @@ class PermissionExtension extends Extension
         $container->register(PermissionChecker::class, PermissionChecker::class)
             ->addArgument(new Reference(RoleHierarchy::class))
             ->addArgument("%silversat_permission.site%");
+
+        $container->register(AccessControlSubscriber::class, AccessControlSubscriber::class)
+            ->addArgument(new Reference(PermissionChecker::class))
+            ->addArgument("%silversat_permission.access_control%")
+            ->addArgument("%silversat_permission.site%")
+            ->addTag('kernel.event_subscriber');
     }
 }
