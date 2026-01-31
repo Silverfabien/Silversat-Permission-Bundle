@@ -34,6 +34,15 @@ class Configuration implements ConfigurationInterface
                         ->scalarPrototype()->end()
                     ->end()
                 ->end()
+                ->arrayNode('access_control')
+                    ->defaultValue([])
+                    ->arrayPrototype()
+                        ->children()
+                            ->scalarNode('path')->isRequired()->cannotBeEmpty()->end()
+                            ->scalarNode('role')->isRequired()->cannotBeEmpty()->end()
+                        ->end()
+                    ->end()
+                ->end()
             ->end();
 
         return $treeBuilder;
